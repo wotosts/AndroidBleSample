@@ -24,8 +24,9 @@ class NordicBleConnectionViewModel(application: Application) : AndroidViewModel(
             foundService.value = serviceList
         }
 
-        override fun onRead(uuid: UUID, bytes: ByteArray?) {
-            val readData = if (bytes != null) Utils.bytesToHex(bytes) else "data is null"
+        override fun onRead(uuid: UUID, bytes: ByteArray?, msg: String?) {
+            val readData =
+                if (bytes != null) Utils.bytesToHex(bytes) else if (!TextUtils.isEmpty(msg)) msg else "data is null"
             log("${uuid.toString()}/ Read) $readData")
         }
 
@@ -33,8 +34,9 @@ class NordicBleConnectionViewModel(application: Application) : AndroidViewModel(
             log("${uuid.toString()}/ Write) " + (if (isSuccess) "success" else "failed"))
         }
 
-        override fun onNotified(uuid: UUID, bytes: ByteArray?) {
-            val notiData = if (bytes != null) Utils.bytesToHex(bytes) else "data is null"
+        override fun onNotified(uuid: UUID, bytes: ByteArray?, msg: String?) {
+            val notiData =
+                if (bytes != null) Utils.bytesToHex(bytes) else if (!TextUtils.isEmpty(msg)) msg else "data is null"
             log("${uuid.toString()}/ notify) $notiData")
         }
 

@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:ems="10"
-                android:hint="Input text"
+                android:hint="Input bytes"
                 android:inputType="textPersonName"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"

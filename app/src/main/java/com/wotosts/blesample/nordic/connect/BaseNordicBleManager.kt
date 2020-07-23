@@ -63,20 +63,20 @@ open class BaseNordicBleManager(context: Context) :
         }
         if (isChecked) {
             enableNotifications(characteristic)
-                .done { device ->  mCallbacks.onNotified(uuid, Utils.hexToBytes("set up"))}
-                .fail { device, status ->  mCallbacks.onNotified(uuid,  Utils.hexToBytes("failed"))}
+                .done { device ->  mCallbacks.onNotified(uuid, null, "set up")}
+                .fail { device, status ->  mCallbacks.onNotified(uuid,  null, "failed")}
                 .enqueue()
         } else {
             disableNotifications(characteristic)
-                .done { device ->  mCallbacks.onNotified(uuid,  Utils.hexToBytes("end"))}
-                .fail { device, status ->  mCallbacks.onNotified(uuid,  Utils.hexToBytes("failed"))}
+                .done { device ->  mCallbacks.onNotified(uuid,  null, "end")}
+                .fail { device, status ->  mCallbacks.onNotified(uuid,  null, "failed")}
                 .enqueue()
         }
     }
 
     fun readCharacteristic(uuid: UUID) {
         readCharacteristic(characteristicMap[uuid])
-            .fail { device, status -> mCallbacks.onRead(uuid, null) }
+            .fail { device, status -> mCallbacks.onRead(uuid, null, "failed") }
             .with { device, data -> mCallbacks.onRead(uuid, data.value) }
             .enqueue()
     }
@@ -84,7 +84,7 @@ open class BaseNordicBleManager(context: Context) :
     fun writeCharacteristic(uuid: UUID, data: String) {
         val characteristic = characteristicMap[uuid]
 
-        writeCharacteristic(characteristic, data.toByteArray())
+        writeCharacteristic(characteristic, Utils.hexToBytes(data))
             .done { device -> mCallbacks.onWrite(uuid, true) }
             .fail { device, status -> mCallbacks.onWrite(uuid, false) }
             .enqueue()
@@ -98,8 +98,8 @@ open class BaseNordicBleManager(context: Context) :
 
     interface ConnectedLECallback : BleManagerCallbacks {
         fun updateServices(serviceList: MutableList<BluetoothGattService>)
-        fun onRead(uuid: UUID, bytes: ByteArray?)
+        fun onRead(uuid: UUID, bytes: ByteArray?, msg: String? = null)
         fun onWrite(uuid: UUID, isSuccess: Boolean)
-        fun onNotified(uuid: UUID, bytes: ByteArray?)
+        fun onNotified(uuid: UUID, bytes: ByteArray?, msg:String? = null)
     }
 }

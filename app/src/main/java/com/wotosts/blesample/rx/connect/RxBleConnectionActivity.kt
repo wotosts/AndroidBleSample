@@ -67,8 +67,8 @@ class RxBleConnectionActivity : BaseActivity() {
             Observer { services -> if (services != null) serviceAdapter.updateScanResult(services) })
         viewModel.connectionErrorEvent.observe(
             this,
-            Observer { event -> Handler().postDelayed({ connect(mac!!) }, 3000) })
-        viewModel.log.observe(this, Observer { str ->
+            Observer { Handler().postDelayed({ connect(mac!!) }, 3000) })
+        viewModel.log.observe(this, Observer {
             binding.scroll.fullScroll(
                 ScrollView.FOCUS_DOWN
             )
