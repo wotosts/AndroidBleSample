@@ -41,10 +41,7 @@ open class BaseNordicBleManager(context: Context) :
             serviceList.forEach { bluetoothGattService ->
                 bluetoothGattService.characteristics.forEach { characteristic ->
                     run {
-                        characteristicMap.put(
-                            characteristic.uuid,
-                            characteristic
-                        )
+                        characteristicMap[characteristic.uuid] = characteristic
                     }
                 }
             }
@@ -56,7 +53,7 @@ open class BaseNordicBleManager(context: Context) :
     }
 
     fun notifyCharacteristic(isChecked: Boolean, uuid: UUID) {
-        val characteristic = characteristicMap.get(uuid)
+        val characteristic = characteristicMap[uuid]
 
         setNotificationCallback(characteristic).with { device, data ->
             mCallbacks.onNotified(
@@ -78,14 +75,14 @@ open class BaseNordicBleManager(context: Context) :
     }
 
     fun readCharacteristic(uuid: UUID) {
-        readCharacteristic(characteristicMap.get(uuid))
+        readCharacteristic(characteristicMap[uuid])
             .fail { device, status -> mCallbacks.onRead(uuid, null) }
             .with { device, data -> mCallbacks.onRead(uuid, data.value) }
             .enqueue()
     }
 
     fun writeCharacteristic(uuid: UUID, data: String) {
-        val characteristic = characteristicMap.get(uuid)
+        val characteristic = characteristicMap[uuid]
 
         writeCharacteristic(characteristic, data.toByteArray())
             .done { device -> mCallbacks.onWrite(uuid, true) }
