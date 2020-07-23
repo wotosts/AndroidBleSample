@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="scanResult"
+            type="no.nordicsemi.android.support.v18.scanner.ScanResult" />
+        <variable
+            name="listener"
+            type="com.wotosts.blesample.nordic.scan.ScanResultAdapter.ItemClickListener" />
+        <import type="android.text.TextUtils"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> listener.onClicked(scanResult)}"
+        android:background="@{scanResult.connectable ? -1 : @color/serviceBackground}"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="@{scanResult.connectable ? 1f : 0.5f}"
+            android:text="@{TextUtils.isEmpty(scanResult.device.name) ? @string/unknown : scanResult.device.name}"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvMac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{scanResult.device.address}"
+            android:alpha="@{scanResult.connectable ? 1f : 0.5f}"
+            app:layout_constraintBottom_toBottomOf="@+id/tvName"
+            app:layout_constraintStart_toEndOf="@+id/tvName" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

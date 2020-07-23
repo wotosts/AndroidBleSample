@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Ble Sample</string>
+
+    <string name="unknown">Unknown</string>
+</resources>
