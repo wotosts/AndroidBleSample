@@ -1,6 +1,7 @@
 package com.wotosts.blesample.rx.connect
 
 import android.os.Bundle
+import android.os.Handler
 import android.widget.ScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -41,7 +42,7 @@ class RxBleConnectionActivity : BaseActivity() {
 
             override fun onConnectClicked(checked: Boolean, uuid: UUID) {
                 // 사용하지 않아도 됨
-                if(checked)
+                if (checked)
                     viewModel.connectCharacteristic(uuid)
                 else
                     viewModel.disconnectCharacteristic(uuid)
@@ -61,18 +62,17 @@ class RxBleConnectionActivity : BaseActivity() {
         })
         binding.rvService.adapter = serviceAdapter
 
-        viewModel.foundServices.observe(this, Observer { services ->  if(services != null) serviceAdapter.updateScanResult(services) })
-        viewModel.connectionErrorEvent.observe(this, Observer { event -> connect(mac!!) })
+        viewModel.foundServices.observe(
+            this,
+            Observer { services -> if (services != null) serviceAdapter.updateScanResult(services) })
+        viewModel.connectionErrorEvent.observe(
+            this,
+            Observer { event -> Handler().postDelayed({ connect(mac!!) }, 3000) })
         viewModel.log.observe(this, Observer { str ->
             binding.scroll.fullScroll(
                 ScrollView.FOCUS_DOWN
             )
         })
-    }
-
-    override fun onDestroy() {
-        viewModel.disconnectDevice()
-        super.onDestroy()
     }
 
     fun connect(mac: String) {

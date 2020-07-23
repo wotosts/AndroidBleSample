@@ -288,4 +288,8 @@ class RxBleConnectionViewModel : ViewModel() {
         log.postValue((if (TextUtils.isEmpty(log.value)) "" else log.value) + "\n" + msg)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disconnectDevice()
+    }
 }
