@@ -37,7 +37,7 @@ class NordicBleScanActivity : BaseActivity() {
             })
         binding.rvResult.adapter = scanResultAdapter
 
-        viewModel.scanResults.observe(this, Observer { results -> scanResultAdapter.updateList(results) })
+        viewModel.scanResultMap.observe(this, Observer { results -> scanResultAdapter.updateList(results.values.toList()) })
     }
 
     override fun onStart() {

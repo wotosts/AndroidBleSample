@@ -8,7 +8,7 @@ import no.nordicsemi.android.support.v18.scanner.*
 
 class NordicBleScanViewModel: ViewModel {
     val isScanning = MutableLiveData<Boolean>()
-    val scanResults = MutableLiveData<List<ScanResult>>()
+    val scanResultMap = MutableLiveData<MutableMap<String, ScanResult>>()
 
     private var scanJob: Job? = null
 
@@ -35,7 +35,7 @@ class NordicBleScanViewModel: ViewModel {
         isScanning.value = true
 
         scanJob = viewModelScope.launch {
-            delay(3000L)       // 3 seconds
+            delay(5000L)       // 3 seconds
             stopScan()
         }
     }
@@ -56,17 +56,19 @@ class NordicBleScanViewModel: ViewModel {
          * 리스트 아이템은 스스로 정리해서 사용하기
          */
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val list = scanResults.value as MutableList<ScanResult>
-            list.add(result)
+            val map = scanResultMap.value
 
-            scanResults.value = list
+            map?.set(result.device.address, result)
+            scanResultMap.value = map
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>) {
             if (results.isEmpty())
                 return
 
-            scanResults.value = results
+            val map = scanResultMap.value
+            results.forEach{result -> map?.set(result.device.address, result)}
+            scanResultMap.value = map
         }
     }
 }
