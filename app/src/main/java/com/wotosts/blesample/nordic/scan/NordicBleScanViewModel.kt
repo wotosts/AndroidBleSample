@@ -6,15 +6,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import no.nordicsemi.android.support.v18.scanner.*
 
-class NordicBleScanViewModel: ViewModel {
-    val isScanning = MutableLiveData<Boolean>()
-    val scanResultMap = MutableLiveData<MutableMap<String, ScanResult>>()
+class NordicBleScanViewModel: ViewModel() {
+    val isScanning = MutableLiveData<Boolean>(false)
+    val scanResultMap = MutableLiveData<MutableMap<String, ScanResult>>().apply { value = mutableMapOf() }
 
     private var scanJob: Job? = null
-
-    constructor() {
-        isScanning.value = false
-    }
 
     /**
      * 적절한 scan 시간 정하기
@@ -26,7 +22,7 @@ class NordicBleScanViewModel: ViewModel {
         val setting = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .setReportDelay(500)
-            .setUseHardwareBatchingIfSupported(false)
+            .setUseHardwareBatchingIfSupported(true)
             .build()
         val filter = ScanFilter.Builder()
             .build()
@@ -56,18 +52,17 @@ class NordicBleScanViewModel: ViewModel {
          * 리스트 아이템은 스스로 정리해서 사용하기
          */
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val map = scanResultMap.value
-
-            map?.set(result.device.address, result)
-            scanResultMap.value = map
+            // not used
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>) {
             if (results.isEmpty())
                 return
 
-            val map = scanResultMap.value
-            results.forEach{result -> map?.set(result.device.address, result)}
+            val map = scanResultMap.value!!
+            for(result in results) {
+                map[result.device.address] = result
+            }
             scanResultMap.value = map
         }
     }

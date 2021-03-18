@@ -37,7 +37,7 @@ class RxBleScanActivity : BaseActivity() {
             })
         binding.rvResult.adapter = scanAdapter
 
-        viewModel.resultUpdateEvent.observe(this, Observer { event -> scanAdapter.updateList(viewModel.scanResults)})
+        viewModel.scanResultMap.observe(this, Observer { scanAdapter.updateList(it.values.toList()) })
     }
 
     override fun onStart() {

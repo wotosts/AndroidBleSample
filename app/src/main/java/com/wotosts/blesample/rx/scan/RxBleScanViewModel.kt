@@ -9,7 +9,6 @@ import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import com.wotosts.blesample.BleApplication
-import com.wotosts.blesample.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Job
@@ -20,8 +19,7 @@ class RxBleScanViewModel(application: Application) : AndroidViewModel(applicatio
     var bleClient: RxBleClient = BleApplication.getBleClient(application)
 
     val isScanning = MutableLiveData<Boolean>()
-    val resultUpdateEvent = SingleLiveEvent<Void>()
-    val scanResults = mutableListOf<ScanResult>()
+    val scanResultMap = MutableLiveData<MutableMap<String, ScanResult>>().apply { value = mutableMapOf() }
 
     var scanDisposable: Disposable? = null
     var scanJob: Job? = null
@@ -62,16 +60,8 @@ class RxBleScanViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun addScanResult(scanResult: ScanResult) {
-        for(i in scanResults.indices) {
-            val it = scanResults[i]
-            if (it.bleDevice.macAddress.equals(scanResult.bleDevice.macAddress)) {
-                scanResults[i] = scanResult
-                return
-            }
-        }
-
-        scanResults.add(scanResult)
-        resultUpdateEvent.call()
+        scanResultMap.value!![scanResult.bleDevice.macAddress] = scanResult
+        scanResultMap.value = scanResultMap.value
     }
 
     override fun onCleared() {

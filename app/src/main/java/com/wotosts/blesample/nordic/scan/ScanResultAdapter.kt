@@ -2,11 +2,13 @@ package com.wotosts.blesample.nordic.scan
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.wotosts.blesample.databinding.ItemNordicScanBinding
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 
-class ScanResultAdapter(private var list: List<ScanResult>, private var listener: ItemClickListener?) :
+class ScanResultAdapter(private var list: List<ScanResult>,
+                        private var listener: ItemClickListener?) :
     RecyclerView.Adapter<ScanResultAdapter.ScanResultViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -19,9 +21,7 @@ class ScanResultAdapter(private var list: List<ScanResult>, private var listener
         return ScanResultViewHolder(binding, listener)
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount(): Int = list.size
 
     override fun onBindViewHolder(
         holder: ScanResultViewHolder,
@@ -30,10 +30,23 @@ class ScanResultAdapter(private var list: List<ScanResult>, private var listener
         holder.onBind(list[position])
     }
 
-    fun updateList(list: List<ScanResult>) {
-        this.list = list
+    fun updateList(newList: List<ScanResult>) {
+        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return list[oldItemPosition].device.address == newList[newItemPosition].device.address
+            }
 
-        notifyDataSetChanged()
+            override fun getOldListSize(): Int = list.size
+
+            override fun getNewListSize(): Int = newList.size
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return areItemsTheSame(oldItemPosition, newItemPosition)
+            }
+        })
+
+        diffResult.dispatchUpdatesTo(this)
+        list = newList
     }
 
     class ScanResultViewHolder(
@@ -47,7 +60,7 @@ class ScanResultAdapter(private var list: List<ScanResult>, private var listener
         }
     }
 
-    public interface ItemClickListener {
+    interface ItemClickListener {
         fun onClicked(result: ScanResult)
     }
 }

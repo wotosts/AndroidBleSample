@@ -4,9 +4,9 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.wotosts.blesample.BaseActivity
 import com.wotosts.blesample.R
 import com.wotosts.blesample.databinding.ActivityNordicBleScanBinding
@@ -17,16 +17,13 @@ import no.nordicsemi.android.support.v18.scanner.ScanResult
 class NordicBleScanActivity : BaseActivity() {
 
     lateinit var binding: ActivityNordicBleScanBinding
-    lateinit var viewModel: NordicBleScanViewModel
+    val viewModel: NordicBleScanViewModel by viewModels()
     lateinit var scanResultAdapter: ScanResultAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_nordic_ble_scan)
         binding.lifecycleOwner = this
-
-        viewModel = ViewModelProvider(this)
-            .get(NordicBleScanViewModel::class.java)
         binding.viewModel = viewModel
 
         scanResultAdapter =
@@ -37,7 +34,7 @@ class NordicBleScanActivity : BaseActivity() {
             })
         binding.rvResult.adapter = scanResultAdapter
 
-        viewModel.scanResultMap.observe(this, Observer { results -> scanResultAdapter.updateList(results.values.toList()) })
+        viewModel.scanResultMap.observe(this, Observer { scanResultAdapter.updateList(it.values.toList()) })
     }
 
     override fun onStart() {
