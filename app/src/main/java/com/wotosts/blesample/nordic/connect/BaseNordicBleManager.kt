@@ -22,10 +22,6 @@ open class BaseNordicBleManager(context: Context) :
     var logSession: LogSession? = null
 
     protected var callback: BleManagerGattCallback = object : BleManagerGattCallback() {
-        override fun initialize() {
-            super.initialize()
-        }
-
         override fun onDeviceDisconnected() {
         }
 

@@ -9,15 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.wotosts.blesample.ServiceItemClickListener
+import com.wotosts.blesample.rx.connect.ServiceItemClickListener
 import com.wotosts.blesample.databinding.ItemNordicDiscoverServiceBinding
 import com.wotosts.blesample.model.ServiceItem
 import java.util.*
 
-class DiscoveredServiceAdapter(listener: ServiceItemClickListener) :
+class DiscoveredServiceAdapter(private val listener: ServiceItemClickListener) :
     RecyclerView.Adapter<DiscoveredServiceAdapter.DiscoveredServiceViewHolder>() {
-    private val resultList: MutableList<ServiceItem>
-    private val listener: ServiceItemClickListener
+
+    private val resultList: MutableList<ServiceItem> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,24 +37,19 @@ class DiscoveredServiceAdapter(listener: ServiceItemClickListener) :
         holder.onBind(resultList[position], listener)
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getItemCount(): Int {
-        return resultList.size
-    }
+    override fun getItemCount(): Int = resultList.size
 
-    override fun getItemViewType(position: Int): Int {
-        return resultList[position].type
-    }
+    override fun getItemViewType(position: Int): Int = resultList[position].type
 
     fun updateServices(serviceList: List<BluetoothGattService>) {
         resultList.clear()
+
         for (service in serviceList) {
             resultList.add(
                 ServiceItem(
-                    ServiceItem.Companion.SERVICE,
+                    ServiceItem.SERVICE,
                     getServiceType(service),
                     service.uuid
                 )
@@ -64,7 +59,7 @@ class DiscoveredServiceAdapter(listener: ServiceItemClickListener) :
             for (characteristic in characteristics) {
                 resultList.add(
                     ServiceItem(
-                        ServiceItem.Companion.CHARACTERISTIC,
+                        ServiceItem.CHARACTERISTIC,
                         describeProperties(characteristic),
                         characteristic.uuid
                     )
@@ -101,17 +96,18 @@ class DiscoveredServiceAdapter(listener: ServiceItemClickListener) :
     }
 
     inner class DiscoveredServiceViewHolder(var binding: ItemNordicDiscoverServiceBinding) :
-        ViewHolder(binding.getRoot()) {
+        ViewHolder(binding.root) {
         fun onBind(
             item: ServiceItem,
             listener: ServiceItemClickListener
         ) {
             binding.item = item
-            binding.listener = object : ServiceItemClickListener {
+            binding.listener = object :
+                ServiceItemClickListener {
                 override fun onItemClicked(item: ServiceItem) {
                     listener.onItemClicked(item)
 
-                    if (item.type == ServiceItem.Companion.SERVICE) return
+                    if (item.type == ServiceItem.SERVICE) return
 
                     if (item.description.contains("Write") && binding.layoutMsg.visibility == View.GONE)
                         binding.layoutMsg.visibility = View.VISIBLE
@@ -155,18 +151,13 @@ class DiscoveredServiceAdapter(listener: ServiceItemClickListener) :
 //            else
 //                binding.switchConnect.setVisibility(View.GONE);
 
-            if (item.description.contains("Read")) binding.btnRead.visibility = View.VISIBLE
-            else binding.btnRead.visibility = View.GONE
-            if (item.description.contains("Notify")) binding.btnNoti.visibility = View.VISIBLE
-            else binding.btnNoti.visibility = View.GONE
-            if (item.description.contains("Write")) binding.layoutMsg.visibility = View.VISIBLE
-            else binding.layoutMsg.visibility = View.GONE
+            binding.btnRead.visibility = if (item.description.contains("Read")) View.VISIBLE else View.GONE
+            binding.btnNoti.visibility = if (item.description.contains("Notify")) View.VISIBLE else View.GONE
+            binding.layoutMsg.visibility = if (item.description.contains("Write")) View.VISIBLE else View.GONE
         }
     }
 
     init {
-        resultList = ArrayList()
-        this.listener = listener
         setHasStableIds(true)
     }
 }

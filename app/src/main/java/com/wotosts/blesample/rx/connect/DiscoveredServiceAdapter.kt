@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.polidea.rxandroidble2.RxBleDeviceServices
-import com.wotosts.blesample.ServiceItemClickListener
 import com.wotosts.blesample.databinding.ItemRxbleDiscoverServiceBinding
 import com.wotosts.blesample.model.ServiceItem
 import java.util.*

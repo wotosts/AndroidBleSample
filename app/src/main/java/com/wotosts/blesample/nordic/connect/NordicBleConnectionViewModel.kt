@@ -134,19 +134,14 @@ class NordicBleConnectionViewModel(application: Application) : AndroidViewModel(
             return
         }
 
-        //if (bleManager.isConnected)
         bleManager.writeCharacteristic(uuid, data)
     }
 
     fun readData(uuid: UUID) {
-        //if (bleManager.isConnected)
         bleManager.readCharacteristic(uuid)
     }
 
     fun toggleNotification(isChecked: Boolean, uuid: UUID) {
-//        if (!bleManager.isConnected)
-//            return
-
         bleManager.notifyCharacteristic(isChecked, uuid)
     }
 

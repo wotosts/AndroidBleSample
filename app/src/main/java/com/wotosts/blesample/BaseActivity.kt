@@ -1,6 +1,5 @@
 package com.wotosts.blesample
 
-import android.R
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity

@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.wotosts.blesample.BaseActivity
 import com.wotosts.blesample.BleApplication
 import com.wotosts.blesample.R
-import com.wotosts.blesample.ServiceItemClickListener
 import com.wotosts.blesample.databinding.ActivityRxBleConnectionBinding
 import com.wotosts.blesample.model.ServiceItem
 import com.wotosts.blesample.util.Utils
@@ -35,7 +34,8 @@ class RxBleConnectionActivity : BaseActivity() {
         connect(mac!!)
         binding.viewModel = viewModel
 
-        serviceAdapter = DiscoveredServiceAdapter(object : ServiceItemClickListener {
+        serviceAdapter = DiscoveredServiceAdapter(object :
+            ServiceItemClickListener {
             override fun onItemClicked(item: ServiceItem) {
                 // nothing to do
             }

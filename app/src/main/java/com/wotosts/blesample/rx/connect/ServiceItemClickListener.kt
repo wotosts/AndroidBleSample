@@ -1,4 +1,4 @@
-package com.wotosts.blesample
+package com.wotosts.blesample.rx.connect
 
 import com.wotosts.blesample.model.ServiceItem
 import java.util.*

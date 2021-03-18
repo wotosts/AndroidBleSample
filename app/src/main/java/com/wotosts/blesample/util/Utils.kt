@@ -8,7 +8,7 @@ class Utils {
 
         private val HEX_ARRAY = "0123456789ABCDEF".toCharArray()
 
-        fun bytesToHex(bytes: ByteArray): String? {
+        fun bytesToHex(bytes: ByteArray): String {
             val hexChars = CharArray(bytes.size * 2)
             for (j in bytes.indices) {
                 val v: Int = (bytes[j].toInt() and 0xFF)
@@ -18,7 +18,7 @@ class Utils {
             return String(hexChars)
         }
 
-        fun hexToBytes(hexRepresentation: String): ByteArray? {
+        fun hexToBytes(hexRepresentation: String): ByteArray {
             require(hexRepresentation.length % 2 != 1) { "hexToBytes requires an even-length String parameter" }
             val len = hexRepresentation.length
             val data = ByteArray(len / 2)

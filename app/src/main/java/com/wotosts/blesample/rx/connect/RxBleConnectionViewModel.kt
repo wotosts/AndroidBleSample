@@ -36,7 +36,7 @@ class RxBleConnectionViewModel : ViewModel() {
     val foundServices = MutableLiveData<RxBleDeviceServices?>()
     var log = MutableLiveData<String>()
 
-    val connectionErrorEvent = SingleLiveEvent<Void>()
+    val connectionErrorEvent = SingleLiveEvent<Unit>()
 
     fun setBleDevice(bleDevice: RxBleDevice) {
         this.bleDevice = bleDevice
@@ -62,9 +62,7 @@ class RxBleConnectionViewModel : ViewModel() {
         discoverServices()
     }
 
-    fun getBleDevice(): RxBleDevice? {
-        return bleDevice
-    }
+    fun getBleDevice(): RxBleDevice? = bleDevice
 
     private fun discoverServices() {
         val disposable: Disposable = connection!!
@@ -222,7 +220,7 @@ class RxBleConnectionViewModel : ViewModel() {
                 .flatMap{ connection1: RxBleConnection ->
                         connection1.writeCharacteristic(
                             uuid,
-                            Utils.hexToBytes(msg!!)!!
+                            Utils.hexToBytes(msg!!)
                         )
                     }
                 .subscribeOn(Schedulers.newThread())

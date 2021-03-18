@@ -17,8 +17,8 @@ import com.wotosts.blesample.nordic.scan.NordicBleScanActivity
 import com.wotosts.blesample.rx.scan.RxBleScanActivity
 
 class MainActivity : AppCompatActivity() {
-    val REQUEST_BT = 2000
-    val REQUEST_LOCATION = 2001
+    private val REQUEST_BT = 2000
+    private val REQUEST_LOCATION = 2001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

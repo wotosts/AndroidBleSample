@@ -9,7 +9,7 @@
             type="com.wotosts.blesample.model.ServiceItem" />
         <variable
             name="listener"
-            type="com.wotosts.blesample.ServiceItemClickListener" />
+            type="com.wotosts.blesample.rx.connect.ServiceItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
