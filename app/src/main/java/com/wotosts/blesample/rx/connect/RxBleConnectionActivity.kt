@@ -2,6 +2,7 @@ package com.wotosts.blesample.rx.connect
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.widget.ScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -67,7 +68,7 @@ class RxBleConnectionActivity : BaseActivity() {
             Observer { services -> if (services != null) serviceAdapter.updateScanResult(services) })
         viewModel.connectionErrorEvent.observe(
             this,
-            Observer { Handler().postDelayed({ connect(mac!!) }, 3000) })
+            Observer { Handler(Looper.getMainLooper()).postDelayed({ connect(mac) }, 3000) })
         viewModel.log.observe(this, Observer {
             binding.scroll.fullScroll(
                 ScrollView.FOCUS_DOWN

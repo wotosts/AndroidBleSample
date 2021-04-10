@@ -268,7 +268,7 @@ class RxBleConnectionViewModel : ViewModel() {
         notiDisposable.values.stream()
             .forEach{ disposable: Disposable -> disposable.dispose() }
         notiDisposable.clear()
-        foundServices.value = null
+        connection = null
     }
 
     private fun onConnectionStateChange(newState: RxBleConnectionState) {
