@@ -102,10 +102,10 @@ class NordicBleConnectionViewModel(application: Application) : AndroidViewModel(
     override fun onCleared() {
         super.onCleared()
 
-        if (bleManager.isConnected) {
+        //if (bleManager.isConnected) {
             bleManager.disconnect().enqueue()
             bleDevice = null
-        }
+        //}
     }
 
     fun connect(device: BluetoothDevice) {
@@ -123,7 +123,6 @@ class NordicBleConnectionViewModel(application: Application) : AndroidViewModel(
             return
 
         bleManager.connect(bleDevice!!)
-            .retry(10, 200)
             .useAutoConnect(false)
             .enqueue()
     }
